@@ -18,7 +18,7 @@ def calculate_average(num_list):
     return average
 
 if __name__ == "__main__":
-    print("Программа для вычисления среднего арифметического.")
+    print("Программа для вычисления среднего арифметического")
     user_input = input("Введите числа через пробел: ")
 
     numbers = get_numbers_from_input(user_input)
