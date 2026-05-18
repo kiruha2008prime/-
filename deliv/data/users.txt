@@ -1,4 +1,6 @@
-{"id": 1, "name": "Admin", "phone": "+79990000000", "email": "admin@delivery.ru", "password": "admin123", "role": "admin", "address": null, "bonus": 0}
-{"id": 2, "name": "Client", "phone": "+79990000001", "email": "client@delivery.ru", "password": "client123", "role": "client", "address": "ул. Ленина, 1", "bonus": 0}
-{"id": 3, "name": "Courier", "phone": "+79990000002", "email": "courier@delivery.ru", "password": "courier123", "role": "courier", "address": null, "bonus": 0}
-{"id": 4, "name": "Restaurant", "phone": "+79990000003", "email": "restaurant@delivery.ru", "password": "restaurant123", "role": "restaurant", "address": null, "bonus": 0}
+{"id": 4, "name": "Admin", "phone": "+79990000000", "email": "admin@delivery.ru", "password": "admin123", "role": "admin", "address": null, "bonus": 0}
+{"id": 3, "name": "Client", "phone": "+79990000001", "email": "client@delivery.ru", "password": "client123", "role": "client", "address": "ул. Ленина, 1", "bonus": 100}
+{"id": 5, "name": "Courier", "phone": "+79990000002", "email": "courier@delivery.ru", "password": "courier123", "role": "courier", "address": null, "bonus": 0}
+{"id": 6, "name": "Restaurant", "phone": "+79990000003", "email": "restaurant@delivery.ru", "password": "restaurant123", "role": "restaurant", "address": null, "bonus": 0}
+{"id": 2, "name": "Dodo", "phone": "+70000003", "email": "Dodo.dodo", "password": "123", "role": "restaurant", "address": null, "bonus": 0}
+{"id": 1, "name": "BurgerKing", "phone": "000", "email": "BK.king", "password": "123", "role": "restaurant", "address": null, "bonus": 0}
