@@ -1,1 +1,2 @@
-{"id": 1, "name": "Ресторан Restaurant", "address": "Адрес не указан", "phone": "+79990000003", "menu": []}
+{"id": 1, "name": "Ресторан Dodo", "address": "Адрес не указан", "phone": "+70000003", "menu": []}
+{"id": 2, "name": "Ресторан BurgerKing", "address": "Адрес не указан", "phone": "+700001000", "menu": []}
