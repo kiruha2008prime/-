@@ -1,0 +1,8 @@
+{"id": 1, "restaurant_id": 1, "name": "Пицца Маргарита", "description": "Классическая пицца", "price": 450.0, "cuisine": "Итальянская", "rating": 5.0}
+{"id": 1, "restaurant_id": 2, "name": "Бургер", "description": "С сыром и беконом", "price": 200.0, "cuisine": "Американская", "rating": 3.9}
+{"id": 2, "restaurant_id": 1, "name": "Пицца Пепперони", "description": "Классическая итальянская пицца", "price": 300.0, "cuisine": "Итальянская", "rating": 4.3}
+{"id": 3, "restaurant_id": 1, "name": "Пицца четыре сыра", "description": "Классическая итальянская пицца", "price": 350.0, "cuisine": "Итальянская", "rating": 5.0}
+{"id": 4, "restaurant_id": 1, "name": "Пицца Барбеккю", "description": "Классическая итальянская пицца", "price": 500.0, "cuisine": "Итальянская", "rating": 4.6}
+{"id": 2, "restaurant_id": 2, "name": "Картошка фри", "description": "Тонко нарезанный картофель во фритюре", "price": 100.0, "cuisine": "Американская", "rating": 4.8}
+{"id": 3, "restaurant_id": 2, "name": "Кока кола", "description": "Газированный напиток", "price": 120.0, "cuisine": "Американская", "rating": 5.0}
+{"id": 4, "restaurant_id": 2, "name": "Ролл", "description": "Шримп ролл с курицей", "price": 200.0, "cuisine": "Американская", "rating": 2.7}
