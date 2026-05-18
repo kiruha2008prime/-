@@ -22,16 +22,39 @@ def client_menu(user: User):
         choice = input("Выберите действие: ")
 
         if choice == "1":
+            # Получаем список ресторанов
             restaurants_data = read_file("restaurants.txt")
+            if not restaurants_data:
+                print("Нет доступных ресторанов.")
+            else:
+                for r_data in restaurants_data:
+                    restaurant = Restaurant(**r_data)
+                    print(f"\n--- Ресторан: {restaurant.name} (ID: {restaurant.id}) ---")
+                    print(f"Адрес: {restaurant.address}")
+                    print(f"Телефон: {restaurant.phone}")
+                    print("Меню:")
+                    # Получаем меню для текущего ресторана
+                    menu = get_restaurant_menu(restaurant.id)
+                    if not menu:
+                        print("  Меню пусто.")
+                    else:
+                        for item in menu:
+                            print(f"  {item.id}. {item.name} - {item.price} руб. ({item.cuisine})")
+        elif choice == "2":
+            # Показываем список ресторанов для выбора
+            restaurants_data = read_file("restaurants.txt")
+            if not restaurants_data:
+                print("Нет доступных ресторанов.")
+                continue
+            print("\nДоступные рестораны:")
             for r_data in restaurants_data:
                 restaurant = Restaurant(**r_data)
-                print(f"\nРесторан: {restaurant.name} (ID: {restaurant.id})")
-                menu = get_restaurant_menu(restaurant.id)
-                for item in menu:
-                    print(f"  - {item.name}: {item.price} руб. ({item.cuisine})")
-        elif choice == "2":
+                print(f"{restaurant.id}. {restaurant.name}")
             restaurant_id = int(input("Введите ID ресторана: "))
             menu = get_restaurant_menu(restaurant_id)
+            if not menu:
+                print("В этом ресторане нет блюд.")
+                continue
             for item in menu:
                 print(f"{item.id}. {item.name} - {item.price} руб.")
             items = []
@@ -44,6 +67,8 @@ def client_menu(user: User):
                 item = next((m for m in menu if m.id == item_id), None)
                 if item:
                     items.append({"menu_item_id": item_id, "name": item.name, "price": item.price, "quantity": quantity})
+                else:
+                    print("Блюдо не найдено.")
             delivery_address = input("Адрес доставки: ")
             order = create_order(user.id, restaurant_id, items, delivery_address)
             print(f"Заказ #{order.id} создан! Статус: {order.status.value}")
@@ -57,7 +82,7 @@ def client_menu(user: User):
                         client_id=o["client_id"],
                         restaurant_id=o["restaurant_id"],
                         items=o["items"],
-                        status=OrderStatus(o["status"]),  # Преобразуем строку в OrderStatus
+                        status=OrderStatus(o["status"]),
                         delivery_address=o["delivery_address"],
                         total_price=o["total_price"],
                         courier_id=o.get("courier_id"),
@@ -68,7 +93,7 @@ def client_menu(user: User):
                 print(f"Заказ #{order.id}: {order.status.value}, Сумма: {order.total_price} руб.")
         elif choice == "4":
             break
-
+            
 def courier_menu(user: User):
     while True:
         print("\n=== Личный кабинет курьера ===")
@@ -163,21 +188,78 @@ def restaurant_menu(user: User):
 
         if choice == "1":
             orders_data = read_file("orders.txt")
-            restaurant_orders = [Order(**o) for o in orders_data if o["restaurant_id"] == user.id]
-            for order in restaurant_orders:
-                print(f"Заказ #{order.id}: {order.status.value}, Сумма: {order.total_price} руб.")
+            restaurant_orders = []
+            for o in orders_data:
+                # Показываем заказы, которые ожидают подтверждения или готовятся
+                if o["restaurant_id"] == user.id and o["status"] in [OrderStatus.PENDING.value, OrderStatus.COOKING.value]:
+                    order = Order(
+                        id=o["id"],
+                        client_id=o["client_id"],
+                        restaurant_id=o["restaurant_id"],
+                        items=o["items"],
+                        status=OrderStatus(o["status"]),
+                        delivery_address=o["delivery_address"],
+                        total_price=o["total_price"],
+                        courier_id=o.get("courier_id"),
+                        created_at=o.get("created_at")
+                    )
+                    restaurant_orders.append(order)
+
+            if not restaurant_orders:
+                print("Нет новых заказов.")
+            else:
+                for order in restaurant_orders:
+                    # Получаем имя клиента и его телефон
+                    client_data = next(
+                        (u for u in read_file("users.txt") if u["id"] == order.client_id),
+                        None
+                    )
+                    client_name = client_data["name"] if client_data else "Неизвестно"
+                    client_phone = client_data["phone"] if client_data else "Неизвестно"
+                    print(f"Заказ #{order.id}: Клиент: {client_name} (Телефон: {client_phone}), Адрес: {order.delivery_address}, Статус: {order.status.value}, Сумма: {order.total_price} руб.")
+                    # Показываем состав заказа
+                    print("  Состав заказа:")
+                    for item in order.items:
+                        print(f"    - {item['name']} x {item['quantity']} = {item['price'] * item['quantity']} руб.")
+
         elif choice == "2":
-            order_id = int(input("Введите ID заказа: "))
-            new_status = input("Новый статус (COOKING/DELIVERY/COMPLETED/CANCELLED): ")
-            status_map = {
-                "COOKING": OrderStatus.COOKING,
-                "DELIVERY": OrderStatus.DELIVERY,
-                "COMPLETED": OrderStatus.COMPLETED,
-                "CANCELLED": OrderStatus.CANCELLED
-            }
-            if new_status in status_map:
-                update_order_status(order_id, status_map[new_status])
-                print("Статус обновлён!")
+            orders_data = read_file("orders.txt")
+            restaurant_orders = []
+            for o in orders_data:
+                if o["restaurant_id"] == user.id and o["status"] in [OrderStatus.PENDING.value, OrderStatus.COOKING.value]:
+                    order = Order(
+                        id=o["id"],
+                        client_id=o["client_id"],
+                        restaurant_id=o["restaurant_id"],
+                        items=o["items"],
+                        status=OrderStatus(o["status"]),
+                        delivery_address=o["delivery_address"],
+                        total_price=o["total_price"],
+                        courier_id=o.get("courier_id"),
+                        created_at=o.get("created_at")
+                    )
+                    restaurant_orders.append(order)
+
+            if not restaurant_orders:
+                print("Нет заказов для обновления статуса.")
+            else:
+                for order in restaurant_orders:
+                    print(f"{order.id}. Статус: {order.status.value}")
+                order_id = int(input("Введите ID заказа для обновления статуса: "))
+                new_status = input("Новый статус (CONFIRMED/COOKING/DELIVERY/COMPLETED/CANCELLED): ")
+                status_map = {
+                    "CONFIRMED": OrderStatus.CONFIRMED,
+                    "COOKING": OrderStatus.COOKING,
+                    "DELIVERY": OrderStatus.DELIVERY,
+                    "COMPLETED": OrderStatus.COMPLETED,
+                    "CANCELLED": OrderStatus.CANCELLED
+                }
+                if new_status in status_map:
+                    update_order_status(order_id, status_map[new_status])
+                    print("Статус обновлён!")
+                else:
+                    print("Некорректный статус.")
+
         elif choice == "3":
             name = input("Название блюда: ")
             description = input("Описание: ")
