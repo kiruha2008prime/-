@@ -100,7 +100,7 @@ def create_order(client_id: int, restaurant_id: int, items: List[Dict], delivery
         client_id=client_id,
         restaurant_id=restaurant_id,
         items=items,
-        status=OrderStatus.PENDING,
+        status=OrderStatus.PENDING,  # Статус "Ожидает подтверждения"
         delivery_address=delivery_address,
         total_price=total_price,
         created_at=datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
